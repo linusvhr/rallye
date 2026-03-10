@@ -54,29 +54,61 @@
             margin: 24px 0;
             color: #2e4059;
         }
-        .content p {
-            margin-bottom: 16px;
-            font-size: 1.1rem;
+        .content-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.5);
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(243,179,61,0.2);
         }
-        .content i {
+        .content-item i {
+            font-size: 1.5rem;
             color: #f3b33d;
-            margin-right: 8px;
-            width: 24px;
+            min-width: 32px;
             text-align: center;
+            margin-top: 2px;
         }
-        .placeholder-box {
-            background: rgba(243, 179, 61, 0.1);
+        .content-item p {
+            font-size: 1rem;
+            margin: 0;
+        }
+        .qr-box {
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 24px;
             padding: 20px;
             margin: 24px 0;
-            border: 1px dashed #f3b33d;
-            color: #1e2b3a;
+            border: 2px dashed #f3b33d;
+            text-align: center;
         }
-        .placeholder-box i {
-            font-size: 2rem;
-            display: block;
-            margin-bottom: 12px;
-            color: #f3b33d;
+        .qr-box h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e2b3a;
+            margin-bottom: 16px;
+        }
+        .qr-placeholder {
+            background: #eef2f6;
+            border-radius: 20px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: 2px solid #d0dfee;
+        }
+        .qr-placeholder i {
+            font-size: 4rem;
+            color: #4b5e71;
+            opacity: 0.7;
+        }
+        .qr-placeholder span {
+            font-size: 1rem;
+            color: #4b5e71;
+            font-weight: 500;
         }
         button {
             width: 100%;
@@ -111,6 +143,7 @@
         @media (max-width: 360px) {
             .card { padding: 24px 16px; }
             h1 { font-size: 1.8rem; }
+            .content-item { padding: 12px; }
         }
     </style>
 </head>
@@ -121,14 +154,25 @@
         </h1>
 
         <div class="content">
-            <p><i class="fa-solid fa-circle-info"></i> Hier erscheint in Kürze die Anleitung für deine QR-Rallye.</p>
-            <p><i class="fa-solid fa-arrow-pointer"></i> Scanne die QR-Codes an den Stationen und sammle Punkte.</p>
+            <div class="content-item">
+                <i class="fa-solid fa-circle-info"></i>
+                <p><strong>Informationen:</strong> Gehe zur Rallye-Station in deiner Schule, um weitere Informationen zu erhalten.</p>
+            </div>
+            <div class="content-item">
+                <i class="fa-solid fa-mouse-pointer"></i>
+                <p><strong>QR-Codes scannen:</strong> Scanne die QR-Codes und beantworte die Fragen, um Punkte zu sammeln. Am Ende kannst du deine Punkte gegen Belohnungen eintauschen.</p>
+            </div>
         </div>
 
-        <div class="placeholder-box">
-            <i class="fa-solid fa-pen-ruler"></i>
-            <strong>Platzhalter für deine Inhalte</strong>
-            <p style="margin-top: 12px; font-size: 1rem;">Sobald du mir den genauen Text gibst, passe ich alles an.</p>
+        <div class="qr-box">
+            <h3><i class="fa-solid fa-qrcode"></i> Erster QR-Code</h3>
+            <div class="qr-placeholder">
+                <i class="fa-solid fa-camera"></i>
+                <span>Hier erscheint der erste QR-Code – suche ihn, um zu starten.</span>
+                <!-- Später kannst du hier ein echtes Bild einfügen:
+                <img src="dein-qrcode.png" alt="QR-Code" style="width: 100%; height: auto; border-radius: 16px;"> 
+                -->
+            </div>
         </div>
 
         <button onclick="window.location.href='/start'">
