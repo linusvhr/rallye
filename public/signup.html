@@ -255,6 +255,9 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    // Token im localStorage speichern
+                    localStorage.setItem('rallye_token', data.token);
+                    // Weiterleitung zum Tutorial
                     window.location.href = '/tutorial';
                 } else {
                     statusDiv.innerHTML = `<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Fehler: ${data.error || 'Unbekannter Fehler'}</span>`;
