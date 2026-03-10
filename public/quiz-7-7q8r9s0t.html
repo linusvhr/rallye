@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frage 7 · QR-Rallye</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(145deg,#f9fafc,#eef2f6); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:12px; }
+        .card { background:rgba(255,255,255,0.9); backdrop-filter:blur(15px); border-radius:32px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.2); max-width:480px; width:100%; padding:28px 24px; }
+        h1 { font-size:clamp(1.6rem,6vw,2.2rem); font-weight:700; background:linear-gradient(135deg,#1e2b3a,#2b4b6f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+        .question { font-size:1.2rem; margin:20px 0; color:#1e2b3a; }
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: #e2e9f2;
+            border-radius: 10px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #f3b33d;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(243,179,61,0.5);
+        }
+        #sliderValue {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+        button { width:100%; padding:14px; font-size:1.1rem; font-weight:700; background:linear-gradient(105deg,#f3b33d,#f5c26b); border:none; border-radius:40px; color:#1e2b3a; cursor:pointer; box-shadow:0 8px 20px -5px rgba(243,179,61,0.5); margin-top:12px; }
+        #message { margin-top:16px; text-align:center; }
+        .footer-note { margin-top:20px; font-size:0.8rem; color:#6f8aa3; text-align:center; border-top:1px dashed #d0dfee; padding-top:14px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Frage 7</h1>
+        <div class="question">Wie viel Prozent der Erdoberfläche sind mit Wasser bedeckt? (ca.)</div>
+        <div class="slider-container">
+            <input type="range" id="slider" min="0" max="100" value="50">
+            <span id="sliderValue">50%</span>
+        </div>
+        <button id="submitBtn">Antwort prüfen</button>
+        <div id="message"></div>
+        <div class="footer-note"><i class="fa-solid fa-bolt-lightning"></i> Frage 7/10</div>
+    </div>
+
+    <script>
+        (async function() {
+            const token = localStorage.getItem('rallye_token');
+            if (!token) { window.location.href = '/signup'; return; }
+
+            const statusRes = await fetch('/api/quiz-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+            const status = await statusRes.json();
+            if (status.last_correct < 6) {
+                window.location.href = '/403';
+                return;
+            }
+
+            const slider = document.getElementById('slider');
+            const sliderValue = document.getElementById('sliderValue');
+            slider.addEventListener('input', () => {
+                sliderValue.textContent = slider.value + '%';
+            });
+
+            document.getElementById('submitBtn').addEventListener('click', async () => {
+                const answer = slider.value;
+
+                const response = await fetch('/api/quiz-answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, question: 7, answer })
+                });
+                const data = await response.json();
+
+                if (data.correct) {
+                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Weiter...</span>';
+                    setTimeout(() => { window.location.href = data.next; }, 1000);
+                } else {
+                    document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Falsch. Versuche es noch einmal.</span>';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
