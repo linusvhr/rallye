@@ -3,10 +3,6 @@
   "builds": [
     { "src": "public/**", "use": "@vercel/static" },
     { "src": "api/*.py", "use": "@vercel/python" }
-    { "src": "api/quiz-answer.py", "use": "@vercel/python" }
-    { "src": "api/quiz-status.py", "use": "@vercel/python" }
-    { "src": "api/signup.py", "use": "@vercel/python" }
-    { "src": "api/verify-token.py", "use": "@vercel/python" }
   ],
   "routes": [
     { "src": "/signup", "dest": "/public/signup.html" },
