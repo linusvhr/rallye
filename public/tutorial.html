@@ -11,7 +11,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(145deg, #f9fafc 0%, #eef2f6 100%);
             min-height: 100vh;
             display: flex;
@@ -19,44 +19,30 @@
             justify-content: center;
             padding: 12px;
             line-height: 1.4;
-            -webkit-font-smoothing: antialiased;
         }
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255,255,255,0.9);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2);
             max-width: 480px;
             width: 100%;
-            padding: 20px 20px;
+            padding: 20px;
         }
         h1 {
-            font-size: clamp(1.6rem, 6vw, 2.2rem);
+            font-size: clamp(1.6rem,6vw,2.2rem);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #1e2b3a, #2b4b6f);
+            background: linear-gradient(135deg,#1e2b3a,#2b4b6f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        h1 i {
-            font-size: 1.8rem;
-            color: #f3b33d;
-            background: none;
-            -webkit-text-fill-color: initial;
-        }
-        .content {
-            margin: 16px 0;
-            color: #2e4059;
-        }
+        h1 i { font-size: 1.8rem; color: #f3b33d; -webkit-text-fill-color: initial; }
         .content-item {
             display: flex;
-            align-items: flex-start;
             gap: 10px;
             margin-bottom: 12px;
             background: rgba(255,255,255,0.5);
@@ -64,74 +50,37 @@
             border-radius: 20px;
             border: 1px solid rgba(243,179,61,0.2);
         }
-        .content-item i {
-            font-size: 1.3rem;
-            color: #f3b33d;
-            min-width: 28px;
-            text-align: center;
-            margin-top: 2px;
-        }
-        .content-item p {
-            font-size: 0.95rem;
-            margin: 0;
-        }
+        .content-item i { font-size: 1.3rem; color: #f3b33d; min-width: 28px; }
         .qr-box {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255,255,255,0.6);
             border-radius: 24px;
             padding: 16px;
             margin: 16px 0;
             border: 2px dashed #f3b33d;
             text-align: center;
         }
-        .qr-box h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1e2b3a;
-            margin-bottom: 12px;
-        }
         .qr-placeholder {
             background: #eef2f6;
             border-radius: 20px;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            padding: 20px;
             border: 2px solid #d0dfee;
         }
-        .qr-placeholder i {
-            font-size: 3.5rem;
-            color: #4b5e71;
-            opacity: 0.7;
-        }
-        .qr-placeholder span {
-            font-size: 0.9rem;
-            color: #4b5e71;
-            font-weight: 500;
-        }
+        .qr-placeholder i { font-size: 3.5rem; color: #4b5e71; opacity:0.7; }
         button {
             width: 100%;
-            padding: 14px 16px;
+            padding: 14px;
             font-size: 1.1rem;
             font-weight: 700;
-            font-family: inherit;
-            background: linear-gradient(105deg, #f3b33d, #f5c26b);
+            background: linear-gradient(105deg,#f3b33d,#f5c26b);
             border: none;
             border-radius: 40px;
             color: #1e2b3a;
             cursor: pointer;
-            box-shadow: 0 8px 20px -5px rgba(243, 179, 61, 0.5);
+            box-shadow: 0 8px 20px -5px rgba(243,179,61,0.5);
             transition: all 0.15s;
-            border: 1px solid rgba(255, 255, 255, 0.4);
             margin-top: 8px;
-            -webkit-tap-highlight-color: transparent;
         }
-        button:active {
-            transform: scale(0.98);
-            background: linear-gradient(105deg, #f5bc4f, #f7cd82);
-            box-shadow: 0 4px 12px -2px #f3b33d;
-        }
+        button:active { transform: scale(0.98); }
         .footer-note {
             margin-top: 16px;
             font-size: 0.8rem;
@@ -140,83 +89,55 @@
             border-top: 1px dashed #d0dfee;
             padding-top: 12px;
         }
-        @media (max-width: 360px) {
-            .card { padding: 16px; }
-            h1 { font-size: 1.6rem; }
-            .content-item { padding: 10px; }
-            .qr-placeholder i { font-size: 3rem; }
+        @media (max-width:360px) {
+            .card { padding:16px; }
+            h1 { font-size:1.6rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Der Inhalt ist anfangs versteckt, wird erst nach erfolgreicher Tokenprüfung eingeblendet -->
     <div class="card" id="content" style="display: none;">
-        <h1>
-            <i class="fa-solid fa-compass"></i> Tutorial
-        </h1>
-
-        <div class="content">
-            <div class="content-item">
-                <i class="fa-solid fa-circle-info"></i>
-                <p><strong>Informationen:</strong> Gehe zur Rallye-Station in ..., um weitere Informationen zu erhalten.</p>
-            </div>
-            <div class="content-item">
-                <i class="fa-solid fa-mouse-pointer"></i>
-                <p><strong>QR-Codes scannen:</strong> Scanne die QR-Codes und beantworte die Fragen, um Punkte zu sammeln. Am Ende kannst du deine Punkte gegen Belohnungen eintauschen.</p>
-            </div>
+        <h1><i class="fa-solid fa-compass"></i> Tutorial</h1>
+        <div class="content-item">
+            <i class="fa-solid fa-circle-info"></i>
+            <p><strong>Informationen:</strong> Gehe zur Rallye-Station in ..., um weitere Informationen zu erhalten.</p>
         </div>
-
+        <div class="content-item">
+            <i class="fa-solid fa-mouse-pointer"></i>
+            <p><strong>QR-Codes scannen:</strong> Scanne die QR-Codes und beantworte die Fragen, um Punkte zu sammeln. Am Ende kannst du deine Punkte gegen Belohnungen eintauschen.</p>
+        </div>
         <div class="qr-box">
             <h3><i class="fa-solid fa-qrcode"></i> Hier findest du den ersten QR-Code</h3>
             <div class="qr-placeholder">
                 <i class="fa-solid fa-camera"></i>
                 <span>Hier erscheint der erste QR-Code – suche ihn, um zu starten.</span>
-                <!-- Später kannst du hier ein echtes Bild einfügen:
-                <img src="dein-qrcode.png" alt="QR-Code" style="width:100%; height:auto; border-radius:16px;"> 
-                -->
             </div>
         </div>
-
-        <button onclick="window.location.href='/start'">
-            Weiter zur Rallye <i class="fa-solid fa-arrow-right"></i>
-        </button>
-
-        <div class="footer-note">
-            <i class="fa-solid fa-bolt-lightning"></i> Viel Erfolg!
-        </div>
+        <button onclick="window.location.href='/start'">Weiter zur Rallye <i class="fa-solid fa-arrow-right"></i></button>
+        <div class="footer-note"><i class="fa-solid fa-bolt-lightning"></i> Viel Erfolg!</div>
     </div>
 
     <script>
         (async function() {
             const token = localStorage.getItem('rallye_token');
-            const contentDiv = document.getElementById('content');
-
-            // Wenn kein Token vorhanden, sofort zum Login
             if (!token) {
                 window.location.href = '/signup';
                 return;
             }
-
-            // Token serverseitig prüfen
             try {
-                const response = await fetch('/api/verify-token', {
+                const res = await fetch('/api/verify-token', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token })
                 });
-                const data = await response.json();
-
+                const data = await res.json();
                 if (data.valid) {
-                    // Token gültig → Inhalt anzeigen
-                    contentDiv.style.display = 'block';
+                    document.getElementById('content').style.display = 'block';
                 } else {
-                    // Token ungültig → aus localStorage entfernen und zum Login
                     localStorage.removeItem('rallye_token');
                     window.location.href = '/signup';
                 }
-            } catch (error) {
-                console.error('Fehler bei Tokenprüfung:', error);
-                // Bei Netzwerkfehler sicherheitshalber ausloggen
+            } catch {
                 localStorage.removeItem('rallye_token');
                 window.location.href = '/signup';
             }
