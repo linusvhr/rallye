@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* gleiches CSS wie bei Frage 1, leicht angepasst */
+        /* gleiches CSS wie bei Frage 1, aber angepasst */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -97,17 +97,23 @@
             const token = localStorage.getItem('rallye_token');
             if (!token) { window.location.href = '/signup'; return; }
 
-            // Prüfe, ob Frage 1 bereits richtig beantwortet wurde
-            const statusRes = await fetch('/api/quiz-status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-            });
-            const status = await statusRes.json();
-            if (status.last_correct < 1) { // Frage 1 muss richtig sein
-                window.location.href = '/403';
-                return;
-            }
+            // Prüfen, ob Frage 1 richtig (sonst zurück)
+            try {
+                const statusRes = await fetch('/api/quiz-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const status = await statusRes.json();
+                if (!status.status || status.status[0] !== true) {
+                    window.location.href = '/quiz-1-8f7a3b9c';
+                    return;
+                }
+                if (status.status[1] === true) {
+                    window.location.href = '/quiz-2-d4e5f6a7/answer';
+                    return;
+                }
+            } catch (e) { console.error(e); }
 
             document.getElementById('submitBtn').addEventListener('click', async () => {
                 const answer = document.getElementById('answer').value.trim();
@@ -124,8 +130,10 @@
                 const data = await response.json();
 
                 if (data.correct) {
-                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Weiter zur nächsten Frage...</span>';
-                    setTimeout(() => { window.location.href = data.next; }, 1000);
+                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Du wirst weitergeleitet...</span>';
+                    setTimeout(() => {
+                        window.location.href = '/quiz-2-d4e5f6a7/answer';
+                    }, 1000);
                 } else {
                     document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Leider falsch. Versuche es noch einmal.</span>';
                 }
