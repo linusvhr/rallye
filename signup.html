@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anmeldung · QR-Rallye</title>
+    <!-- Google Fonts für moderne Typografie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f9fafc 0%, #eef2f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            max-width: 500px;
+            width: 100%;
+            padding: 2.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1e2b3a, #2b4b6f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subheadline {
+            font-size: 1rem;
+            color: #4b5e71;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            border-left: 4px solid #f3b33d;
+            padding-left: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #2e4059;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.3px;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            border: 2px solid #e2e9f2;
+            border-radius: 1.2rem;
+            outline: none;
+            transition: all 0.2s;
+            color: #1e2b3a;
+        }
+
+        input:focus {
+            border-color: #f3b33d;
+            box-shadow: 0 0 0 4px rgba(243, 179, 61, 0.15);
+        }
+
+        input::placeholder {
+            color: #9aafc4;
+            font-weight: 300;
+            opacity: 0.7;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: inherit;
+            background: linear-gradient(105deg, #f3b33d, #f5c26b);
+            border: none;
+            border-radius: 1.5rem;
+            color: #1e2b3a;
+            cursor: pointer;
+            box-shadow: 0 8px 20px -8px rgba(243, 179, 61, 0.4);
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
+            margin-top: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        button:hover {
+            background: linear-gradient(105deg, #f5bc4f, #f7cd82);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px -8px #f3b33d;
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px -4px #f3b33d;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #6f8aa3;
+            text-align: center;
+            border-top: 1px dashed #d0dfee;
+            padding-top: 1.2rem;
+        }
+
+        .footer-note a {
+            color: #2b4b6f;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted #f3b33d;
+        }
+
+        .footer-note a:hover {
+            color: #f3b33d;
+        }
+
+        /* sehr kleine Bildschirme */
+        @media (max-width: 400px) {
+            .card {
+                padding: 1.8rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>👋 Rallye-Anmeldung</h1>
+        <div class="subheadline">
+            Nimm an der QR-Code-Rallye teil –<br> 
+            einfach Name und Nachname eintragen.
+        </div>
+
+        <form id="signupForm" onsubmit="return handleSubmit(event)">
+            <div class="form-group">
+                <label for="vorname">Vorname</label>
+                <input type="text" id="vorname" name="vorname" placeholder="z.B. Sofia" required>
+            </div>
+            <div class="form-group">
+                <label for="nachname">Nachname</label>
+                <input type="text" id="nachname" name="nachname" placeholder="z.B. Meier" required>
+            </div>
+            <button type="submit" id="submitBtn">Für Rallye anmelden →</button>
+        </form>
+
+        <div class="footer-note">
+            ⚡ Schon angemeldet? <a href="#">Hier geht's zum Start</a>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault(); // verhindert das Neuladen der Seite
+
+            const vorname = document.getElementById('vorname').value.trim();
+            const nachname = document.getElementById('nachname').value.trim();
+
+            if (vorname === '' || nachname === '') {
+                alert('Bitte beide Felder ausfüllen.');
+                return false;
+            }
+
+            // Hier später die Verbindung zu deinem Python-Backend einbauen
+            // z.B. via fetch() an eine /api/signup Route
+            
+            // Für den Moment nur eine Erfolgsmeldung
+            alert(`Danke für die Anmeldung, ${vorname} ${nachname}! 🎉\n(Backend folgt in Kürze.)`);
+
+            // Optional: Formular zurücksetzen
+            document.getElementById('signupForm').reset();
+        }
+    </script>
+</body>
+</html>
