@@ -6,7 +6,11 @@
       "use": "@vercel/static"
     },
     {
-      "src": "api/*.py",
+      "src": "api/signup.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/verify-token.py",
       "use": "@vercel/python"
     }
   ],
@@ -20,8 +24,12 @@
       "dest": "/public/tutorial.html"
     },
     {
-      "src": "/api/(.*)",
+      "src": "/api/signup",
       "dest": "/api/signup.py"
+    },
+    {
+      "src": "/api/verify-token",
+      "dest": "/api/verify-token.py"
     }
   ]
 }
