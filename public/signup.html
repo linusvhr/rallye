@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Anmeldung · QR-Rallye</title>
-    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
@@ -103,12 +102,105 @@
             margin-top: 12px;
             letter-spacing: 0.3px;
             -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         button:active {
             transform: scale(0.98);
             background: linear-gradient(105deg, #f5bc4f, #f7cd82);
             box-shadow: 0 4px 12px -2px #f3b33d;
         }
+        button:disabled {
+            opacity: 0.9;
+            cursor: not-allowed;
+        }
+        /* Loader-Animation – 5 Punkte im Kreis */
+        .loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 30px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #1e2b3a;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        .dot:nth-child(1) { animation-delay: -0.3s; }
+        .dot:nth-child(2) { animation-delay: -0.15s; }
+        .dot:nth-child(3) { animation-delay: 0s; }
+        .dot:nth-child(4) { animation-delay: 0.15s; }
+        .dot:nth-child(5) { animation-delay: 0.3s; }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1) translateX(0);
+                opacity: 0.8;
+            }
+            25% {
+                transform: scale(1.5) translateX(-5px);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.8) translateX(5px);
+                opacity: 0.6;
+            }
+            75% {
+                transform: scale(1.2) translateX(-2px);
+                opacity: 0.9;
+            }
+        }
+
+        /* Alternative kompliziertere Animation – falls gewünscht, kann man auch eine andere einbauen */
+        /* Hier habe ich eine zweite, etwas "tanzendere" Variante vorbereitet, die per Klasse aktiviert werden kann */
+        .loader-fancy {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+        }
+        .loader-fancy div {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #1e2b3a;
+            border-radius: 50%;
+            animation: fancy 2s infinite;
+        }
+        .loader-fancy div:nth-child(1) { animation-delay: -0.4s; }
+        .loader-fancy div:nth-child(2) { animation-delay: -0.2s; }
+        .loader-fancy div:nth-child(3) { animation-delay: 0s; }
+        .loader-fancy div:nth-child(4) { animation-delay: 0.2s; }
+        .loader-fancy div:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes fancy {
+            0% {
+                transform: rotate(0deg) translateX(15px) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: rotate(90deg) translateX(10px) rotate(-90deg) scale(1.5);
+                opacity: 0.8;
+            }
+            50% {
+                transform: rotate(180deg) translateX(5px) rotate(-180deg) scale(0.8);
+                opacity: 0.6;
+            }
+            75% {
+                transform: rotate(270deg) translateX(10px) rotate(-270deg) scale(1.2);
+                opacity: 0.9;
+            }
+            100% {
+                transform: rotate(360deg) translateX(15px) rotate(-360deg) scale(1);
+                opacity: 1;
+            }
+        }
+
         #statusMessage {
             margin-top: 20px;
             text-align: center;
@@ -166,7 +258,8 @@
                        inputmode="text" autocomplete="family-name" required>
             </div>
             <button type="submit" id="submitBtn">
-                Für Rallye anmelden <i class="fa-solid fa-arrow-right"></i>
+                <span id="buttonText">Für Rallye anmelden</span>
+                <i class="fa-solid fa-arrow-right" id="buttonIcon"></i>
             </button>
         </form>
 
@@ -181,6 +274,8 @@
         const form = document.getElementById('signupForm');
         const statusDiv = document.getElementById('statusMessage');
         const submitBtn = document.getElementById('submitBtn');
+        const buttonText = document.getElementById('buttonText');
+        const buttonIcon = document.getElementById('buttonIcon');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -193,8 +288,21 @@
                 return;
             }
 
+            // Button in Ladezustand versetzen
             submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Wird angemeldet ...';
+            buttonText.style.display = 'none';
+            buttonIcon.style.display = 'none';
+
+            // Lade-Animation einfügen (5 Punkte)
+            const loader = document.createElement('div');
+            loader.className = 'loader';
+            for (let i = 0; i < 5; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                loader.appendChild(dot);
+            }
+            submitBtn.appendChild(loader);
+
             statusDiv.innerHTML = '';
 
             try {
@@ -211,15 +319,24 @@
                     window.location.href = '/tutorial';
                 } else {
                     statusDiv.innerHTML = `<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Fehler: ${data.error || 'Unbekannter Fehler'}</span>`;
+                    // Button zurücksetzen
+                    resetButton();
                 }
             } catch (error) {
                 statusDiv.innerHTML = '<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Netzwerkfehler – bitte später erneut versuchen.</span>';
                 console.error(error);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Für Rallye anmelden <i class="fa-solid fa-arrow-right"></i>';
+                resetButton();
             }
         });
+
+        function resetButton() {
+            submitBtn.disabled = false;
+            // Entferne den Loader
+            const loader = submitBtn.querySelector('.loader');
+            if (loader) loader.remove();
+            buttonText.style.display = 'inline';
+            buttonIcon.style.display = 'inline';
+        }
     </script>
 </body>
 </html>
