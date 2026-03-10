@@ -17,8 +17,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
-            line-height: 1.5;
+            padding: 12px;
+            line-height: 1.4;
             -webkit-font-smoothing: antialiased;
         }
         .card {
@@ -29,91 +29,91 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
             max-width: 480px;
             width: 100%;
-            padding: 32px 24px;
+            padding: 20px 20px;
         }
         h1 {
-            font-size: clamp(2rem, 7vw, 2.5rem);
+            font-size: clamp(1.6rem, 6vw, 2.2rem);
             font-weight: 700;
             letter-spacing: -0.02em;
             background: linear-gradient(135deg, #1e2b3a, #2b4b6f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         h1 i {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #f3b33d;
             background: none;
             -webkit-text-fill-color: initial;
         }
         .content {
-            margin: 24px 0;
+            margin: 16px 0;
             color: #2e4059;
         }
         .content-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 12px;
             background: rgba(255,255,255,0.5);
-            padding: 16px;
+            padding: 12px;
             border-radius: 20px;
             border: 1px solid rgba(243,179,61,0.2);
         }
         .content-item i {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #f3b33d;
-            min-width: 32px;
+            min-width: 28px;
             text-align: center;
             margin-top: 2px;
         }
         .content-item p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin: 0;
         }
         .qr-box {
             background: rgba(255, 255, 255, 0.6);
             border-radius: 24px;
-            padding: 20px;
-            margin: 24px 0;
+            padding: 16px;
+            margin: 16px 0;
             border: 2px dashed #f3b33d;
             text-align: center;
         }
         .qr-box h3 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: #1e2b3a;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         .qr-placeholder {
             background: #eef2f6;
             border-radius: 20px;
-            padding: 30px 20px;
+            padding: 20px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 8px;
             border: 2px solid #d0dfee;
         }
         .qr-placeholder i {
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: #4b5e71;
             opacity: 0.7;
         }
         .qr-placeholder span {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #4b5e71;
             font-weight: 500;
         }
         button {
             width: 100%;
-            padding: 18px 20px;
-            font-size: 1.2rem;
+            padding: 14px 16px;
+            font-size: 1.1rem;
             font-weight: 700;
             font-family: inherit;
             background: linear-gradient(105deg, #f3b33d, #f5c26b);
@@ -124,7 +124,7 @@
             box-shadow: 0 8px 20px -5px rgba(243, 179, 61, 0.5);
             transition: all 0.15s;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            margin-top: 12px;
+            margin-top: 8px;
             -webkit-tap-highlight-color: transparent;
         }
         button:active {
@@ -133,17 +133,18 @@
             box-shadow: 0 4px 12px -2px #f3b33d;
         }
         .footer-note {
-            margin-top: 28px;
-            font-size: 0.9rem;
+            margin-top: 16px;
+            font-size: 0.8rem;
             color: #6f8aa3;
             text-align: center;
             border-top: 1px dashed #d0dfee;
-            padding-top: 20px;
+            padding-top: 12px;
         }
         @media (max-width: 360px) {
-            .card { padding: 24px 16px; }
-            h1 { font-size: 1.8rem; }
-            .content-item { padding: 12px; }
+            .card { padding: 16px; }
+            h1 { font-size: 1.6rem; }
+            .content-item { padding: 10px; }
+            .qr-placeholder i { font-size: 3rem; }
         }
     </style>
 </head>
@@ -169,9 +170,7 @@
             <div class="qr-placeholder">
                 <i class="fa-solid fa-camera"></i>
                 <span>Hier erscheint der erste QR-Code – suche ihn, um zu starten.</span>
-                <!-- Später kannst du hier ein echtes Bild einfügen:
-                <img src="dein-qrcode.png" alt="QR-Code" style="width: 100%; height: auto; border-radius: 16px;"> 
-                -->
+                <!-- Später: <img src="qrcode.png" alt="QR-Code" style="width:100%; height:auto; border-radius:16px;"> -->
             </div>
         </div>
 
