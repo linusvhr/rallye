@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anmeldung · QR-Rallye</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <style>
+        /* gleiches Styling wie vorher, leicht angepasst für Status-Meldungen */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f9fafc 0%, #eef2f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.5) inset;
+            max-width: 500px;
+            width: 100%;
+            padding: 2.5rem;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1e2b3a, #2b4b6f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .subheadline {
+            font-size: 1rem;
+            color: #4b5e71;
+            margin-bottom: 2rem;
+            border-left: 4px solid #f3b33d;
+            padding-left: 1rem;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #2e4059;
+            margin-bottom: 0.4rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            border: 2px solid #e2e9f2;
+            border-radius: 1.2rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        input:focus {
+            border-color: #f3b33d;
+            box-shadow: 0 0 0 4px rgba(243,179,61,0.15);
+        }
+        button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(105deg, #f3b33d, #f5c26b);
+            border: none;
+            border-radius: 1.5rem;
+            color: #1e2b3a;
+            cursor: pointer;
+            box-shadow: 0 8px 20px -8px rgba(243,179,61,0.4);
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        button:hover {
+            background: linear-gradient(105deg, #f5bc4f, #f7cd82);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px -8px #f3b33d;
+        }
+        #statusMessage {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            min-height: 2rem;
+        }
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #6f8aa3;
+            text-align: center;
+            border-top: 1px dashed #d0dfee;
+            padding-top: 1.2rem;
+        }
+        .footer-note a {
+            color: #2b4b6f;
+            text-decoration: none;
+            border-bottom: 1px dotted #f3b33d;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>👋 Rallye-Anmeldung</h1>
+        <div class="subheadline">
+            Nimm an der QR-Code-Rallye teil –<br> 
+            einfach Name und Nachname eintragen.
+        </div>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="vorname">Vorname</label>
+                <input type="text" id="vorname" name="vorname" placeholder="z.B. Sofia" required>
+            </div>
+            <div class="form-group">
+                <label for="nachname">Nachname</label>
+                <input type="text" id="nachname" name="nachname" placeholder="z.B. Meier" required>
+            </div>
+            <button type="submit" id="submitBtn">Für Rallye anmelden →</button>
+        </form>
+
+        <div id="statusMessage"></div>
+
+        <div class="footer-note">
+            ⚡ Schon angemeldet? <a href="#">Hier geht's zum Start</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const statusDiv = document.getElementById('statusMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const vorname = document.getElementById('vorname').value.trim();
+            const nachname = document.getElementById('nachname').value.trim();
+
+            if (!vorname || !nachname) {
+                statusDiv.innerHTML = '<span style="color:#d32f2f;">❌ Bitte beide Felder ausfüllen.</span>';
+                return;
+            }
+
+            // Button deaktivieren, um Mehrfachklicks zu vermeiden
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Wird angemeldet ...';
+            statusDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vorname, nachname })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusDiv.innerHTML = `<span style="color:#2e7d32;">✅ ${data.message}</span>`;
+                    form.reset();
+                } else {
+                    statusDiv.innerHTML = `<span style="color:#d32f2f;">❌ Fehler: ${data.error || 'Unbekannter Fehler'}</span>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<span style="color:#d32f2f;">❌ Netzwerkfehler – bitte später erneut versuchen.</span>';
+                console.error(error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Für Rallye anmelden →';
+            }
+        });
+    </script>
+</body>
+</html>
