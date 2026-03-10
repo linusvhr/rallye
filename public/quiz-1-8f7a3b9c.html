@@ -18,7 +18,6 @@
             align-items: center;
             justify-content: center;
             padding: 12px;
-            line-height: 1.4;
         }
         .card {
             background: rgba(255,255,255,0.9);
@@ -106,42 +105,59 @@
     </div>
 
     <script>
-        const token = localStorage.getItem('rallye_token');
-        if (!token) window.location.href = '/signup';
+        (async function() {
+            const token = localStorage.getItem('rallye_token');
+            if (!token) { window.location.href = '/signup'; return; }
 
-        // Frage 1 benötigt keine vorherige Prüfung
-
-        let selected = null;
-        document.querySelectorAll('.option').forEach(opt => {
-            opt.addEventListener('click', () => {
-                document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-                opt.classList.add('selected');
-                selected = opt.dataset.value;
-            });
-        });
-
-        document.getElementById('submitBtn').addEventListener('click', async () => {
-            if (!selected) {
-                document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Bitte wähle eine Antwort.</span>';
-                return;
+            // Prüfen, ob Frage 1 bereits richtig beantwortet wurde (dann Weiterleitung zur Antwortseite)
+            try {
+                const statusRes = await fetch('/api/quiz-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const status = await statusRes.json();
+                if (status.status && status.status[0] === true) {
+                    // Frage 1 bereits richtig -> zur Antwortseite
+                    window.location.href = '/quiz-1-8f7a3b9c/answer';
+                    return;
+                }
+            } catch (e) {
+                console.error(e);
             }
 
-            const response = await fetch('/api/quiz-answer', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token, question: 1, answer: selected })
+            let selected = null;
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    selected = opt.dataset.value;
+                });
             });
-            const data = await response.json();
 
-            if (data.correct) {
-                document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Weiter zur nächsten Frage...</span>';
-                setTimeout(() => {
-                    window.location.href = data.next;
-                }, 1000);
-            } else {
-                document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Leider falsch. Versuche es noch einmal.</span>';
-            }
-        });
+            document.getElementById('submitBtn').addEventListener('click', async () => {
+                if (!selected) {
+                    document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Bitte wähle eine Antwort.</span>';
+                    return;
+                }
+
+                const response = await fetch('/api/quiz-answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, question: 1, answer: selected })
+                });
+                const data = await response.json();
+
+                if (data.correct) {
+                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Du wirst weitergeleitet...</span>';
+                    setTimeout(() => {
+                        window.location.href = '/quiz-1-8f7a3b9c/answer';
+                    }, 1000);
+                } else {
+                    document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Leider falsch. Versuche es noch einmal.</span>';
+                }
+            });
+        })();
     </script>
 </body>
 </html>
