@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Tutorial · QR-Rallye</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(145deg, #f9fafc 0%, #eef2f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            max-width: 480px;
+            width: 100%;
+            padding: 32px 24px;
+        }
+        h1 {
+            font-size: clamp(2rem, 7vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1e2b3a, #2b4b6f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h1 i {
+            font-size: 2rem;
+            color: #f3b33d;
+            background: none;
+            -webkit-text-fill-color: initial;
+        }
+        .content {
+            margin: 24px 0;
+            color: #2e4059;
+        }
+        .content p {
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+        .content i {
+            color: #f3b33d;
+            margin-right: 8px;
+            width: 24px;
+            text-align: center;
+        }
+        .placeholder-box {
+            background: rgba(243, 179, 61, 0.1);
+            border-radius: 24px;
+            padding: 20px;
+            margin: 24px 0;
+            border: 1px dashed #f3b33d;
+            color: #1e2b3a;
+        }
+        .placeholder-box i {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 12px;
+            color: #f3b33d;
+        }
+        button {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: inherit;
+            background: linear-gradient(105deg, #f3b33d, #f5c26b);
+            border: none;
+            border-radius: 40px;
+            color: #1e2b3a;
+            cursor: pointer;
+            box-shadow: 0 8px 20px -5px rgba(243, 179, 61, 0.5);
+            transition: all 0.15s;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-top: 12px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        button:active {
+            transform: scale(0.98);
+            background: linear-gradient(105deg, #f5bc4f, #f7cd82);
+            box-shadow: 0 4px 12px -2px #f3b33d;
+        }
+        .footer-note {
+            margin-top: 28px;
+            font-size: 0.9rem;
+            color: #6f8aa3;
+            text-align: center;
+            border-top: 1px dashed #d0dfee;
+            padding-top: 20px;
+        }
+        @media (max-width: 360px) {
+            .card { padding: 24px 16px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>
+            <i class="fa-solid fa-compass"></i> Tutorial
+        </h1>
+
+        <div class="content">
+            <p><i class="fa-solid fa-circle-info"></i> Hier erscheint in Kürze die Anleitung für deine QR-Rallye.</p>
+            <p><i class="fa-solid fa-arrow-pointer"></i> Scanne die QR-Codes an den Stationen und sammle Punkte.</p>
+        </div>
+
+        <div class="placeholder-box">
+            <i class="fa-solid fa-pen-ruler"></i>
+            <strong>Platzhalter für deine Inhalte</strong>
+            <p style="margin-top: 12px; font-size: 1rem;">Sobald du mir den genauen Text gibst, passe ich alles an.</p>
+        </div>
+
+        <button onclick="window.location.href='/start'">
+            Weiter zur Rallye <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <div class="footer-note">
+            <i class="fa-solid fa-bolt-lightning"></i> Viel Erfolg!
+        </div>
+    </div>
+</body>
+</html>
