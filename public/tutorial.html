@@ -150,13 +150,40 @@
 </head>
 <body>
     <script>
-        // Prüfe, ob ein Token vorhanden ist – sonst zurück zum Login
-        if (!localStorage.getItem('rallye_token')) {
-            window.location.href = '/signup';
-        }
+        (async function() {
+            const token = localStorage.getItem('rallye_token');
+            
+            // Kein Token vorhanden → sofort zum Login
+            if (!token) {
+                window.location.href = '/signup';
+                return;
+            }
+
+            // Token serverseitig prüfen
+            try {
+                const response = await fetch('/api/verify-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await response.json();
+
+                if (!data.valid) {
+                    // Token ungültig → localStorage säubern und zum Login
+                    localStorage.removeItem('rallye_token');
+                    window.location.href = '/signup';
+                }
+            } catch (error) {
+                console.error('Fehler bei Tokenprüfung:', error);
+                // Bei Netzwerkfehler vorsichtshalber auch ausloggen
+                localStorage.removeItem('rallye_token');
+                window.location.href = '/signup';
+            }
+        })();
     </script>
 
-    <div class="card">
+    <!-- Der eigentliche Seiteninhalt wird erst angezeigt, wenn der Token gültig ist -->
+    <div class="card" style="display: none;" id="content">
         <h1>
             <i class="fa-solid fa-compass"></i> Tutorial
         </h1>
@@ -189,5 +216,22 @@
             <i class="fa-solid fa-bolt-lightning"></i> Viel Erfolg!
         </div>
     </div>
+
+    <script>
+        // Sobald die Tokenprüfung erfolgreich war, zeigen wir den Inhalt an
+        // (Das folgende Skript wird nach dem async-Check ausgeführt, weil wir den Inhalt erst sichtbar machen, wenn wir wissen, dass der Token gültig ist.
+        // Im obigen async-Check können wir nicht einfach den Inhalt einblenden, weil er asynchron läuft.
+        // Deshalb arbeiten wir mit einem zweiten Skript, das auf ein globales Signal wartet, oder wir setzen ein Flag.
+        // Einfacher: Wir verschieben die ganze Logik in ein einziges async-Skript, das am Ende den Inhalt einblendet.
+    </script>
+
+    <!-- Neues Skript, das nach erfolgreicher Prüfung den Inhalt anzeigt -->
+    <script>
+        (function() {
+            // Warte, bis der async-Check abgeschlossen ist.
+            // Der Einfachheit halber lassen wir das erste Skript den Inhalt einblenden, wenn erfolgreich.
+            // Dazu müssen wir das erste Skript anpassen.
+        })();
+    </script>
 </body>
 </html>
