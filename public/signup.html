@@ -29,7 +29,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
             max-width: 480px;
             width: 100%;
-            padding: 20px 20px;
+            padding: 28px 24px; /* Erhöht für mehr vertikale Länge */
             transition: transform 0.2s ease;
         }
         h1 {
@@ -40,19 +40,19 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
             line-height: 1.2;
         }
         .subheadline {
             font-size: clamp(0.85rem, 4vw, 1rem);
             color: #4b5e71;
-            margin-bottom: 16px;
+            margin-bottom: 20px; /* Mehr Abstand */
             border-left: 4px solid #f3b33d;
             padding-left: 12px;
             font-weight: 400;
         }
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 16px; /* Von 12px erhöht */
         }
         label {
             display: block;
@@ -99,7 +99,7 @@
             box-shadow: 0 8px 20px -5px rgba(243, 179, 61, 0.5);
             transition: all 0.15s;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            margin-top: 8px;
+            margin-top: 12px; /* Von 8px erhöht */
             letter-spacing: 0.3px;
             -webkit-tap-highlight-color: transparent;
             display: flex;
@@ -144,7 +144,7 @@
         }
 
         #statusMessage {
-            margin-top: 12px;
+            margin-top: 16px; /* Von 12px erhöht */
             text-align: center;
             font-size: 0.9rem;
             font-weight: 500;
@@ -152,12 +152,12 @@
             padding: 0 4px;
         }
         .footer-note {
-            margin-top: 16px;
+            margin-top: 20px; /* Von 16px erhöht */
             font-size: 0.8rem;
             color: #6f8aa3;
             text-align: center;
             border-top: 1px dashed #d0dfee;
-            padding-top: 12px;
+            padding-top: 14px; /* Von 12px erhöht */
         }
         .footer-note a {
             color: #2b4b6f;
@@ -174,7 +174,7 @@
             color: #f3b33d;
         }
         @media (max-width: 360px) {
-            .card { padding: 16px; }
+            .card { padding: 20px 16px; }
             h1 { font-size: 1.6rem; }
             button { padding: 12px; font-size: 1rem; }
         }
@@ -255,9 +255,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Token im localStorage speichern
                     localStorage.setItem('rallye_token', data.token);
-                    // Weiterleitung zum Tutorial
                     window.location.href = '/tutorial';
                 } else {
                     statusDiv.innerHTML = `<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Fehler: ${data.error || 'Unbekannter Fehler'}</span>`;
