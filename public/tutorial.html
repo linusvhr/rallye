@@ -149,41 +149,8 @@
     </style>
 </head>
 <body>
-    <script>
-        (async function() {
-            const token = localStorage.getItem('rallye_token');
-            
-            // Kein Token vorhanden → sofort zum Login
-            if (!token) {
-                window.location.href = '/signup';
-                return;
-            }
-
-            // Token serverseitig prüfen
-            try {
-                const response = await fetch('/api/verify-token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token })
-                });
-                const data = await response.json();
-
-                if (!data.valid) {
-                    // Token ungültig → localStorage säubern und zum Login
-                    localStorage.removeItem('rallye_token');
-                    window.location.href = '/signup';
-                }
-            } catch (error) {
-                console.error('Fehler bei Tokenprüfung:', error);
-                // Bei Netzwerkfehler vorsichtshalber auch ausloggen
-                localStorage.removeItem('rallye_token');
-                window.location.href = '/signup';
-            }
-        })();
-    </script>
-
-    <!-- Der eigentliche Seiteninhalt wird erst angezeigt, wenn der Token gültig ist -->
-    <div class="card" style="display: none;" id="content">
+    <!-- Der Inhalt ist anfangs versteckt, wird erst nach erfolgreicher Tokenprüfung eingeblendet -->
+    <div class="card" id="content" style="display: none;">
         <h1>
             <i class="fa-solid fa-compass"></i> Tutorial
         </h1>
@@ -204,7 +171,9 @@
             <div class="qr-placeholder">
                 <i class="fa-solid fa-camera"></i>
                 <span>Hier erscheint der erste QR-Code – suche ihn, um zu starten.</span>
-                <!-- Später: <img src="qrcode.png" alt="QR-Code" style="width:100%; height:auto; border-radius:16px;"> -->
+                <!-- Später kannst du hier ein echtes Bild einfügen:
+                <img src="dein-qrcode.png" alt="QR-Code" style="width:100%; height:auto; border-radius:16px;"> 
+                -->
             </div>
         </div>
 
@@ -218,19 +187,39 @@
     </div>
 
     <script>
-        // Sobald die Tokenprüfung erfolgreich war, zeigen wir den Inhalt an
-        // (Das folgende Skript wird nach dem async-Check ausgeführt, weil wir den Inhalt erst sichtbar machen, wenn wir wissen, dass der Token gültig ist.
-        // Im obigen async-Check können wir nicht einfach den Inhalt einblenden, weil er asynchron läuft.
-        // Deshalb arbeiten wir mit einem zweiten Skript, das auf ein globales Signal wartet, oder wir setzen ein Flag.
-        // Einfacher: Wir verschieben die ganze Logik in ein einziges async-Skript, das am Ende den Inhalt einblendet.
-    </script>
+        (async function() {
+            const token = localStorage.getItem('rallye_token');
+            const contentDiv = document.getElementById('content');
 
-    <!-- Neues Skript, das nach erfolgreicher Prüfung den Inhalt anzeigt -->
-    <script>
-        (function() {
-            // Warte, bis der async-Check abgeschlossen ist.
-            // Der Einfachheit halber lassen wir das erste Skript den Inhalt einblenden, wenn erfolgreich.
-            // Dazu müssen wir das erste Skript anpassen.
+            // Wenn kein Token vorhanden, sofort zum Login
+            if (!token) {
+                window.location.href = '/signup';
+                return;
+            }
+
+            // Token serverseitig prüfen
+            try {
+                const response = await fetch('/api/verify-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await response.json();
+
+                if (data.valid) {
+                    // Token gültig → Inhalt anzeigen
+                    contentDiv.style.display = 'block';
+                } else {
+                    // Token ungültig → aus localStorage entfernen und zum Login
+                    localStorage.removeItem('rallye_token');
+                    window.location.href = '/signup';
+                }
+            } catch (error) {
+                console.error('Fehler bei Tokenprüfung:', error);
+                // Bei Netzwerkfehler sicherheitshalber ausloggen
+                localStorage.removeItem('rallye_token');
+                window.location.href = '/signup';
+            }
         })();
     </script>
 </body>
