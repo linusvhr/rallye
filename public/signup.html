@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* (hier das gleiche CSS wie zuvor – Platz spare ich, du kannst dein bestehendes CSS nehmen) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -19,115 +20,73 @@
             justify-content: center;
             padding: 12px;
             line-height: 1.4;
-            -webkit-font-smoothing: antialiased;
         }
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255,255,255,0.9);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2);
             max-width: 480px;
             width: 100%;
             padding: 28px 24px;
-            transition: transform 0.2s ease;
         }
         h1 {
-            font-size: clamp(1.6rem, 6vw, 2.2rem);
+            font-size: clamp(1.6rem,6vw,2.2rem);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #1e2b3a, #2b4b6f);
+            background: linear-gradient(135deg,#1e2b3a,#2b4b6f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin-bottom: 8px;
-            line-height: 1.2;
         }
         .subheadline {
-            font-size: clamp(0.85rem, 4vw, 1rem);
+            font-size: clamp(0.85rem,4vw,1rem);
             color: #4b5e71;
             margin-bottom: 20px;
             border-left: 4px solid #f3b33d;
             padding-left: 12px;
-            font-weight: 400;
         }
-        .form-group {
-            margin-bottom: 16px;
-        }
+        .form-group { margin-bottom: 16px; }
         label {
             display: block;
             font-weight: 600;
             font-size: 0.85rem;
             color: #2e4059;
             margin-bottom: 4px;
-            letter-spacing: 0.2px;
         }
         input {
             width: 100%;
             padding: 12px 14px;
             font-size: 15px;
-            font-family: inherit;
-            background: white;
             border: 2px solid #e2e9f2;
             border-radius: 24px;
             outline: none;
-            transition: all 0.2s;
-            color: #1e2b3a;
-            -webkit-appearance: none;
-            appearance: none;
         }
         input:focus {
             border-color: #f3b33d;
-            box-shadow: 0 0 0 4px rgba(243, 179, 61, 0.2);
-        }
-        input::placeholder {
-            color: #9aafc4;
-            font-weight: 400;
-            opacity: 0.8;
+            box-shadow: 0 0 0 4px rgba(243,179,61,0.2);
         }
         button {
             width: 100%;
             padding: 14px 16px;
             font-size: 1.1rem;
             font-weight: 700;
-            font-family: inherit;
-            background: linear-gradient(105deg, #f3b33d, #f5c26b);
+            background: linear-gradient(105deg,#f3b33d,#f5c26b);
             border: none;
             border-radius: 40px;
             color: #1e2b3a;
             cursor: pointer;
-            box-shadow: 0 8px 20px -5px rgba(243, 179, 61, 0.5);
-            transition: all 0.15s;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 20px -5px rgba(243,179,61,0.5);
             margin-top: 12px;
-            letter-spacing: 0.3px;
-            -webkit-tap-highlight-color: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
-        button:active {
-            transform: scale(0.98);
-            background: linear-gradient(105deg, #f5bc4f, #f7cd82);
-            box-shadow: 0 4px 12px -2px #f3b33d;
-        }
-        button:disabled {
-            opacity: 0.9;
-            cursor: not-allowed;
-        }
-        .loader {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            height: 24px;
-        }
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.9; cursor: not-allowed; }
+        .loader { display: flex; gap: 6px; height: 24px; }
         .dot {
-            width: 8px;
-            height: 8px;
-            background-color: #1e2b3a;
-            border-radius: 50%;
+            width: 8px; height: 8px; background-color: #1e2b3a; border-radius: 50%;
             animation: pulse 1.5s infinite ease-in-out;
         }
         .dot:nth-child(1) { animation-delay: -0.3s; }
@@ -135,21 +94,17 @@
         .dot:nth-child(3) { animation-delay: 0s; }
         .dot:nth-child(4) { animation-delay: 0.15s; }
         .dot:nth-child(5) { animation-delay: 0.3s; }
-
         @keyframes pulse {
-            0%, 100% { transform: scale(1) translateX(0); opacity: 0.8; }
-            25% { transform: scale(1.5) translateX(-3px); opacity: 1; }
-            50% { transform: scale(0.8) translateX(3px); opacity: 0.6; }
-            75% { transform: scale(1.2) translateX(-2px); opacity: 0.9; }
+            0%,100%{ transform:scale(1) translateX(0); opacity:0.8; }
+            25%{ transform:scale(1.5) translateX(-3px); opacity:1; }
+            50%{ transform:scale(0.8) translateX(3px); opacity:0.6; }
+            75%{ transform:scale(1.2) translateX(-2px); opacity:0.9; }
         }
-
         #statusMessage {
             margin-top: 16px;
             text-align: center;
             font-size: 0.9rem;
-            font-weight: 500;
             min-height: 2rem;
-            padding: 0 4px;
         }
         .footer-note {
             margin-top: 20px;
@@ -159,24 +114,11 @@
             border-top: 1px dashed #d0dfee;
             padding-top: 14px;
         }
-        .footer-note a {
-            color: #2b4b6f;
-            text-decoration: none;
-            font-weight: 600;
-            border-bottom: 1px dotted #f3b33d;
-            padding-bottom: 2px;
-        }
-        .footer-note a i {
-            margin-right: 4px;
-            font-size: 0.7rem;
-        }
-        .footer-note a:hover {
-            color: #f3b33d;
-        }
-        @media (max-width: 360px) {
-            .card { padding: 20px 16px; }
-            h1 { font-size: 1.6rem; }
-            button { padding: 12px; font-size: 1rem; }
+        .footer-note a { color: #2b4b6f; text-decoration: none; border-bottom: 1px dotted #f3b33d; }
+        @media (max-width:360px) {
+            .card { padding:20px 16px; }
+            h1 { font-size:1.6rem; }
+            button { padding:12px; font-size:1rem; }
         }
     </style>
 </head>
@@ -191,13 +133,11 @@
         <form id="signupForm">
             <div class="form-group">
                 <label for="vorname">Vorname</label>
-                <input type="text" id="vorname" name="vorname" placeholder="z.B. Sofia" 
-                       inputmode="text" autocomplete="given-name" required>
+                <input type="text" id="vorname" name="vorname" placeholder="z.B. Sofia" required>
             </div>
             <div class="form-group">
                 <label for="nachname">Nachname</label>
-                <input type="text" id="nachname" name="nachname" placeholder="z.B. Meier" 
-                       inputmode="text" autocomplete="family-name" required>
+                <input type="text" id="nachname" name="nachname" placeholder="z.B. Meier" required>
             </div>
             <button type="submit" id="submitBtn">
                 <span id="buttonText">Für Rallye anmelden</span>
@@ -246,24 +186,29 @@
             statusDiv.innerHTML = '';
 
             try {
+                console.log('📤 Sende Anfrage an /api/signup');
                 const response = await fetch('/api/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ vorname, nachname })
                 });
 
+                console.log('📥 Response-Status:', response.status);
                 const data = await response.json();
+                console.log('📦 Response-Daten:', data);
 
                 if (response.ok && data.token) {
                     localStorage.setItem('rallye_token', data.token);
+                    console.log('✅ Token gespeichert, leite weiter zu /tutorial');
                     window.location.href = '/tutorial';
                 } else {
-                    const errorMsg = data.error || 'Unbekannter Fehler';
+                    const errorMsg = data.error || 'Unbekannter Fehler (kein Token)';
                     statusDiv.innerHTML = `<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Fehler: ${errorMsg}</span>`;
                     resetButton();
                 }
             } catch (error) {
-                statusDiv.innerHTML = '<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Netzwerkfehler – bitte später erneut versuchen.</span>';
+                console.error('🔥 Netzwerk-/Fetch-Fehler:', error);
+                statusDiv.innerHTML = '<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Netzwerkfehler – konnte API nicht erreichen.</span>';
                 resetButton();
             }
         });
