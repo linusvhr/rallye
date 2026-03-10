@@ -63,17 +63,25 @@
         (async function() {
             const token = localStorage.getItem('rallye_token');
             if (!token) { window.location.href = '/signup'; return; }
-
-            const statusRes = await fetch('/api/quiz-status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-            });
-            const status = await statusRes.json();
-            if (status.last_correct < 6) {
-                window.location.href = '/403';
-                return;
-            }
+            try {
+                const statusRes = await fetch('/api/quiz-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const status = await statusRes.json();
+                // Prüfen, dass Fragen 1-6 richtig
+                for (let i = 0; i < 6; i++) {
+                    if (!status.status || status.status[i] !== true) {
+                        window.location.href = '/quiz-6-3m4n5o6p';
+                        return;
+                    }
+                }
+                if (status.status[6] === true) {
+                    window.location.href = '/quiz-7-7q8r9s0t/answer';
+                    return;
+                }
+            } catch (e) { console.error(e); }
 
             const slider = document.getElementById('slider');
             const sliderValue = document.getElementById('sliderValue');
@@ -83,17 +91,15 @@
 
             document.getElementById('submitBtn').addEventListener('click', async () => {
                 const answer = slider.value;
-
                 const response = await fetch('/api/quiz-answer', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token, question: 7, answer })
                 });
                 const data = await response.json();
-
                 if (data.correct) {
-                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Weiter...</span>';
-                    setTimeout(() => { window.location.href = data.next; }, 1000);
+                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Weiterleitung...</span>';
+                    setTimeout(() => { window.location.href = '/quiz-7-7q8r9s0t/answer'; }, 1000);
                 } else {
                     document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Falsch. Versuche es noch einmal.</span>';
                 }
