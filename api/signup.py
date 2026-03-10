@@ -8,35 +8,26 @@ DATABASE_URL = os.environ.get('POSTGRES_URL')
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
-
-        content_length = int(self.headers.get('Content-Length', 0))
-        post_data = self.rfile.read(content_length)
-
+        # Standard: Bei Fehler wird Status 400/500 gesendet
         try:
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
             data = json.loads(post_data.decode('utf-8'))
             vorname = data.get('vorname', '').strip()
             nachname = data.get('nachname', '').strip()
 
             if not vorname or not nachname:
-                self.wfile.write(json.dumps({
-                    'error': 'Vorname und Nachname dürfen nicht leer sein.'
-                }).encode('utf-8'))
+                self._send_error(400, 'Vorname und Nachname dürfen nicht leer sein.')
                 return
 
-            # Zufälligen Token generieren (16 Zeichen, URL-sicher)
-            token = secrets.token_urlsafe(16)[:16]  # z.B. "X5y9q2zR8aB3wL1p"
-
             if not DATABASE_URL:
-                raise Exception("POSTGRES_URL Umgebungsvariable nicht gesetzt")
+                self._send_error(500, 'Datenbankkonfiguration fehlt.')
+                return
 
             conn = psycopg2.connect(DATABASE_URL)
             cur = conn.cursor()
 
-            # Tabelle anlegen, falls nicht vorhanden (Spalte token wird ergänzt)
+            # Tabelle anlegen, falls nicht vorhanden
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS signups (
                     id SERIAL PRIMARY KEY,
@@ -47,27 +38,50 @@ class handler(BaseHTTPRequestHandler):
                 )
             """)
 
+            # Prüfen, ob bereits ein Eintrag mit diesem Namen existiert
             cur.execute(
-                "INSERT INTO signups (vorname, nachname, token) VALUES (%s, %s, %s) RETURNING token",
-                (vorname, nachname, token)
+                "SELECT token FROM signups WHERE vorname = %s AND nachname = %s",
+                (vorname, nachname)
             )
-            generated_token = cur.fetchone()[0]
+            existing = cur.fetchone()
+
+            if existing:
+                token = existing[0]
+                message = f"Willkommen zurück, {vorname} {nachname}!"
+            else:
+                token = secrets.token_urlsafe(16)[:16]
+                cur.execute(
+                    "INSERT INTO signups (vorname, nachname, token) VALUES (%s, %s, %s) RETURNING token",
+                    (vorname, nachname, token)
+                )
+                token = cur.fetchone()[0]
+                message = f"{vorname} {nachname} wurde erfolgreich angemeldet!"
+
             conn.commit()
             cur.close()
             conn.close()
 
-            response = {
+            self._send_response(200, {
                 'status': 'ok',
-                'token': generated_token,
-                'message': f'{vorname} {nachname} wurde erfolgreich angemeldet!'
-            }
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+                'token': token,
+                'message': message
+            })
 
+        except psycopg2.IntegrityError:
+            # Doppelter Eintrag durch Unique-Constraint (falls gesetzt)
+            self._send_error(409, 'Dieser Name ist bereits registriert.')
         except Exception as e:
-            self.wfile.write(json.dumps({
-                'error': f'Interner Serverfehler: {str(e)}'
-            }).encode('utf-8'))
-        return
+            self._send_error(500, f'Interner Serverfehler: {str(e)}')
+
+    def _send_response(self, status, data):
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps(data).encode('utf-8'))
+
+    def _send_error(self, status, message):
+        self._send_response(status, {'error': message})
 
     def do_OPTIONS(self):
         self.send_response(200)
