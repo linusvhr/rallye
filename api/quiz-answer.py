@@ -5,7 +5,7 @@ import psycopg2
 
 DATABASE_URL = os.environ.get('POSTGRES_URL')
 
-# Musterlösungen (bitte anpassen!)
+# Musterlösungen (anpassen!)
 CORRECT_ANSWERS = {
     1: "B",          # Paris
     2: "16",         # 16 Bundesländer
@@ -45,7 +45,7 @@ class handler(BaseHTTPRequestHandler):
             conn = psycopg2.connect(DATABASE_URL)
             cur = conn.cursor()
 
-            # Prüfen, ob vorherige Fragen bereits richtig sind (optional, aber sicher)
+            # Optional: Prüfen, ob vorherige Fragen richtig sind
             if question > 1:
                 prev_cols = [f"q{i}_correct" for i in range(1, question)]
                 cur.execute(f"SELECT {', '.join(prev_cols)} FROM signups WHERE token = %s", (token,))
@@ -54,7 +54,6 @@ class handler(BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps({'error': 'Vorherige Fragen nicht abgeschlossen'}).encode('utf-8'))
                     return
 
-            # Antwort prüfen
             correct = (answer == CORRECT_ANSWERS[question].lower())
 
             if correct:
