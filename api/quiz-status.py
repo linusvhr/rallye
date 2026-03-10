@@ -15,7 +15,7 @@ class handler(BaseHTTPRequestHandler):
         try:
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
-            data = json.loads post_data.decode('utf-8')
+            data = json.loads(post_data.decode('utf-8'))
             token = data.get('token', '').strip()
 
             if not token:
