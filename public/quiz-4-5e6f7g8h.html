@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* gleiches CSS wie zuvor, an Dropdown angepasst */
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Inter',sans-serif; background:linear-gradient(145deg,#f9fafc,#eef2f6); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:12px; }
         .card { background:rgba(255,255,255,0.9); backdrop-filter:blur(15px); border-radius:32px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.2); max-width:480px; width:100%; padding:28px 24px; }
@@ -49,17 +48,22 @@
         (async function() {
             const token = localStorage.getItem('rallye_token');
             if (!token) { window.location.href = '/signup'; return; }
-
-            const statusRes = await fetch('/api/quiz-status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-            });
-            const status = await statusRes.json();
-            if (status.last_correct < 3) {
-                window.location.href = '/403';
-                return;
-            }
+            try {
+                const statusRes = await fetch('/api/quiz-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const status = await statusRes.json();
+                if (!status.status || status.status[0] !== true || status.status[1] !== true || status.status[2] !== true) {
+                    window.location.href = '/quiz-3-1a2b3c4d';
+                    return;
+                }
+                if (status.status[3] === true) {
+                    window.location.href = '/quiz-4-5e6f7g8h/answer';
+                    return;
+                }
+            } catch (e) { console.error(e); }
 
             document.getElementById('submitBtn').addEventListener('click', async () => {
                 const answer = document.getElementById('answer').value;
@@ -67,17 +71,15 @@
                     document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Bitte wähle eine Option.</span>';
                     return;
                 }
-
                 const response = await fetch('/api/quiz-answer', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token, question: 4, answer })
                 });
                 const data = await response.json();
-
                 if (data.correct) {
-                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Weiter...</span>';
-                    setTimeout(() => { window.location.href = data.next; }, 1000);
+                    document.getElementById('message').innerHTML = '<span style="color:#2e7d32;">Richtig! Weiterleitung...</span>';
+                    setTimeout(() => { window.location.href = '/quiz-4-5e6f7g8h/answer'; }, 1000);
                 } else {
                     document.getElementById('message').innerHTML = '<span style="color:#d32f2f;">Falsch. Versuche es noch einmal.</span>';
                 }
