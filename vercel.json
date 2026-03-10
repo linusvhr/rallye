@@ -2,14 +2,82 @@
   "version": 2,
   "builds": [
     {
+      "src": "public/**",
+      "use": "@vercel/static"
+    },
+    {
       "src": "api/signup.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/verify-token.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/quiz-status.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/quiz-answer.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/signup",
-      "dest": "/api/signup.py"
+      "src": "/signup",
+      "dest": "/public/signup.html"
+    },
+    {
+      "src": "/tutorial",
+      "dest": "/public/tutorial.html"
+    },
+    {
+      "src": "/403",
+      "dest": "/public/403.html"
+    },
+    {
+      "src": "/quiz-1-8f7a3b9c",
+      "dest": "/public/quiz-1-8f7a3b9c.html"
+    },
+    {
+      "src": "/quiz-2-d4e5f6a7",
+      "dest": "/public/quiz-2-d4e5f6a7.html"
+    },
+    {
+      "src": "/quiz-3-1a2b3c4d",
+      "dest": "/public/quiz-3-1a2b3c4d.html"
+    },
+    {
+      "src": "/quiz-4-5e6f7g8h",
+      "dest": "/public/quiz-4-5e6f7g8h.html"
+    },
+    {
+      "src": "/quiz-5-9i0j1k2l",
+      "dest": "/public/quiz-5-9i0j1k2l.html"
+    },
+    {
+      "src": "/quiz-6-3m4n5o6p",
+      "dest": "/public/quiz-6-3m4n5o6p.html"
+    },
+    {
+      "src": "/quiz-7-7q8r9s0t",
+      "dest": "/public/quiz-7-7q8r9s0t.html"
+    },
+    {
+      "src": "/quiz-8-1u2v3w4x",
+      "dest": "/public/quiz-8-1u2v3w4x.html"
+    },
+    {
+      "src": "/quiz-9-5y6z7a8b",
+      "dest": "/public/quiz-9-5y6z7a8b.html"
+    },
+    {
+      "src": "/quiz-10-9c0d1e2f",
+      "dest": "/public/quiz-10-9c0d1e2f.html"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/\\1.py"
     }
   ]
 }
