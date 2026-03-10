@@ -8,7 +8,6 @@ DATABASE_URL = os.environ.get('POSTGRES_URL')
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
-        # Standard: Bei Fehler wird Status 400/500 gesendet
         try:
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
@@ -27,7 +26,6 @@ class handler(BaseHTTPRequestHandler):
             conn = psycopg2.connect(DATABASE_URL)
             cur = conn.cursor()
 
-            # Tabelle anlegen, falls nicht vorhanden
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS signups (
                     id SERIAL PRIMARY KEY,
@@ -38,7 +36,6 @@ class handler(BaseHTTPRequestHandler):
                 )
             """)
 
-            # Prüfen, ob bereits ein Eintrag mit diesem Namen existiert
             cur.execute(
                 "SELECT token FROM signups WHERE vorname = %s AND nachname = %s",
                 (vorname, nachname)
@@ -61,14 +58,9 @@ class handler(BaseHTTPRequestHandler):
             cur.close()
             conn.close()
 
-            self._send_response(200, {
-                'status': 'ok',
-                'token': token,
-                'message': message
-            })
+            self._send_response(200, {'status': 'ok', 'token': token, 'message': message})
 
         except psycopg2.IntegrityError:
-            # Doppelter Eintrag durch Unique-Constraint (falls gesetzt)
             self._send_error(409, 'Dieser Name ist bereits registriert.')
         except Exception as e:
             self._send_error(500, f'Interner Serverfehler: {str(e)}')
