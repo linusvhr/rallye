@@ -1,35 +1,14 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "api/signup.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "api/verify-token.py",
-      "use": "@vercel/python"
-    }
+    { "src": "public/**", "use": "@vercel/static" },
+    { "src": "api/signup.py", "use": "@vercel/python" },
+    { "src": "api/verify-token.py", "use": "@vercel/python" }
   ],
   "routes": [
-    {
-      "src": "/signup",
-      "dest": "/public/signup.html"
-    },
-    {
-      "src": "/tutorial",
-      "dest": "/public/tutorial.html"
-    },
-    {
-      "src": "/api/signup",
-      "dest": "/api/signup.py"
-    },
-    {
-      "src": "/api/verify-token",
-      "dest": "/api/verify-token.py"
-    }
+    { "src": "/signup", "dest": "/public/signup.html" },
+    { "src": "/tutorial", "dest": "/public/tutorial.html" },
+    { "src": "/api/signup", "dest": "/api/signup.py" },
+    { "src": "/api/verify-token", "dest": "/api/verify-token.py" }
   ]
 }
