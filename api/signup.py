@@ -59,7 +59,7 @@ class handler(BaseHTTPRequestHandler):
 
             response = {
                 'status': 'ok',
-                'message': f'{vorname} {nachname} wurde erfolgreich angemeldet! 🎉'
+                'message': f'{vorname} {nachname} wurde erfolgreich angemeldet!'
             }
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
