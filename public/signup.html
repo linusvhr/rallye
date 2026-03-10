@@ -29,7 +29,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
             max-width: 480px;
             width: 100%;
-            padding: 28px 24px; /* Erhöht für mehr vertikale Länge */
+            padding: 28px 24px;
             transition: transform 0.2s ease;
         }
         h1 {
@@ -46,13 +46,13 @@
         .subheadline {
             font-size: clamp(0.85rem, 4vw, 1rem);
             color: #4b5e71;
-            margin-bottom: 20px; /* Mehr Abstand */
+            margin-bottom: 20px;
             border-left: 4px solid #f3b33d;
             padding-left: 12px;
             font-weight: 400;
         }
         .form-group {
-            margin-bottom: 16px; /* Von 12px erhöht */
+            margin-bottom: 16px;
         }
         label {
             display: block;
@@ -99,7 +99,7 @@
             box-shadow: 0 8px 20px -5px rgba(243, 179, 61, 0.5);
             transition: all 0.15s;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            margin-top: 12px; /* Von 8px erhöht */
+            margin-top: 12px;
             letter-spacing: 0.3px;
             -webkit-tap-highlight-color: transparent;
             display: flex;
@@ -144,7 +144,7 @@
         }
 
         #statusMessage {
-            margin-top: 16px; /* Von 12px erhöht */
+            margin-top: 16px;
             text-align: center;
             font-size: 0.9rem;
             font-weight: 500;
@@ -152,12 +152,12 @@
             padding: 0 4px;
         }
         .footer-note {
-            margin-top: 20px; /* Von 16px erhöht */
+            margin-top: 20px;
             font-size: 0.8rem;
             color: #6f8aa3;
             text-align: center;
             border-top: 1px dashed #d0dfee;
-            padding-top: 14px; /* Von 12px erhöht */
+            padding-top: 14px;
         }
         .footer-note a {
             color: #2b4b6f;
@@ -246,24 +246,32 @@
             statusDiv.innerHTML = '';
 
             try {
+                console.log('Sende Anmeldedaten:', { vorname, nachname });
                 const response = await fetch('/api/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ vorname, nachname })
                 });
 
+                console.log('Response-Status:', response.status);
                 const data = await response.json();
+                console.log('Response-Daten:', data);
 
-                if (response.ok) {
+                if (response.ok && data.token) {
+                    // Token im localStorage speichern
                     localStorage.setItem('rallye_token', data.token);
+                    console.log('Token gespeichert:', data.token);
+                    // Erfolgreich -> Weiterleitung zum Tutorial
                     window.location.href = '/tutorial';
                 } else {
-                    statusDiv.innerHTML = `<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Fehler: ${data.error || 'Unbekannter Fehler'}</span>`;
+                    // Fehler von der API oder fehlender Token
+                    const errorMsg = data.error || 'Unbekannter Fehler';
+                    statusDiv.innerHTML = `<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Fehler: ${errorMsg}</span>`;
                     resetButton();
                 }
             } catch (error) {
+                console.error('Netzwerk/JavaScript-Fehler:', error);
                 statusDiv.innerHTML = '<span style="color:#d32f2f;"><i class="fa-solid fa-x"></i> Netzwerkfehler – bitte später erneut versuchen.</span>';
-                console.error(error);
                 resetButton();
             }
         });
