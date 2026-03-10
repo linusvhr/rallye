@@ -16,6 +16,10 @@
       "dest": "/public/signup.html"
     },
     {
+      "src": "/tutorial",
+      "dest": "/public/tutorial.html"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/signup.py"
     }
