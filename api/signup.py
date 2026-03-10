@@ -2,26 +2,21 @@ from http.server import BaseHTTPRequestHandler
 import json
 import os
 import psycopg2
-from urllib.parse import parse_qs
-import sys
+import secrets
 
-# Datenbankverbindung aus Umgebungsvariable
 DATABASE_URL = os.environ.get('POSTGRES_URL')
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
-        # CORS-Header für Anfragen vom Frontend
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
 
-        # Länge der POST-Daten ermitteln
         content_length = int(self.headers.get('Content-Length', 0))
         post_data = self.rfile.read(content_length)
-        
+
         try:
-            # JSON parsen
             data = json.loads(post_data.decode('utf-8'))
             vorname = data.get('vorname', '').strip()
             nachname = data.get('nachname', '').strip()
@@ -32,33 +27,38 @@ class handler(BaseHTTPRequestHandler):
                 }).encode('utf-8'))
                 return
 
-            # In Datenbank speichern
+            # Zufälligen Token generieren (16 Zeichen, URL-sicher)
+            token = secrets.token_urlsafe(16)[:16]  # z.B. "X5y9q2zR8aB3wL1p"
+
             if not DATABASE_URL:
                 raise Exception("POSTGRES_URL Umgebungsvariable nicht gesetzt")
 
             conn = psycopg2.connect(DATABASE_URL)
             cur = conn.cursor()
-            
-            # Tabelle anlegen, falls nicht vorhanden
+
+            # Tabelle anlegen, falls nicht vorhanden (Spalte token wird ergänzt)
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS signups (
                     id SERIAL PRIMARY KEY,
                     vorname TEXT NOT NULL,
                     nachname TEXT NOT NULL,
-                    created_at TIMESTAMP DEFAULT NOW()
+                    created_at TIMESTAMP DEFAULT NOW(),
+                    token VARCHAR(32) UNIQUE
                 )
             """)
-            
+
             cur.execute(
-                "INSERT INTO signups (vorname, nachname) VALUES (%s, %s)",
-                (vorname, nachname)
+                "INSERT INTO signups (vorname, nachname, token) VALUES (%s, %s, %s) RETURNING token",
+                (vorname, nachname, token)
             )
+            generated_token = cur.fetchone()[0]
             conn.commit()
             cur.close()
             conn.close()
 
             response = {
                 'status': 'ok',
+                'token': generated_token,
                 'message': f'{vorname} {nachname} wurde erfolgreich angemeldet!'
             }
             self.wfile.write(json.dumps(response).encode('utf-8'))
@@ -69,7 +69,6 @@ class handler(BaseHTTPRequestHandler):
             }).encode('utf-8'))
         return
 
-    # OPTIONS-Anfragen für CORS erlauben
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
