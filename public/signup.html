@@ -2,106 +2,181 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Wichtig für korrekte Skalierung auf Handys -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Anmeldung · QR-Rallye</title>
+    <!-- Google Fonts für bessere Lesbarkeit auch auf kleinen Screens -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-        /* gleiches Styling wie vorher, leicht angepasst für Status-Meldungen */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Reset und Grundlagen */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(145deg, #f9fafc 0%, #eef2f6 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 16px; /* Etwas Abstand zum Rand, auch auf kleinen Handys */
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
+
+        /* Die "Karte" – jetzt noch besser für Touchscreen */
         .card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.5) inset;
-            max-width: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 32px; /* Größere Ecken, moderner */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            max-width: 480px; /* Begrenzung auf Tablets, aber Handys füllen es */
             width: 100%;
-            padding: 2.5rem;
+            padding: 28px 24px; /* Etwas mehr Innenabstand */
+            transition: transform 0.2s ease;
         }
+
         h1 {
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: clamp(1.8rem, 7vw, 2.5rem); /* Dynamische Schriftgröße */
+            font-weight: 700;
             letter-spacing: -0.02em;
             background: linear-gradient(135deg, #1e2b3a, #2b4b6f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+            background-clip: text;
+            margin-bottom: 8px;
+            line-height: 1.2;
         }
+
         .subheadline {
-            font-size: 1rem;
+            font-size: clamp(0.95rem, 4vw, 1.1rem);
             color: #4b5e71;
-            margin-bottom: 2rem;
+            margin-bottom: 28px;
             border-left: 4px solid #f3b33d;
-            padding-left: 1rem;
+            padding-left: 16px;
+            font-weight: 400;
         }
-        .form-group { margin-bottom: 1.5rem; }
+
+        .form-group {
+            margin-bottom: 20px; /* Mehr Abstand zwischen Feldern, besser für Touch */
+        }
+
         label {
             display: block;
-            font-weight: 500;
-            font-size: 0.9rem;
+            font-weight: 600;
+            font-size: 0.95rem;
             color: #2e4059;
-            margin-bottom: 0.4rem;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
         }
+
+        /* Touch-freundliche Input-Felder */
         input {
             width: 100%;
-            padding: 0.9rem 1.2rem;
-            font-size: 1rem;
+            padding: 16px 18px; /* Größere Klickfläche */
+            font-size: 16px; /* Mindestgröße, damit Browser nicht zoomt */
+            font-family: inherit;
+            background: white;
             border: 2px solid #e2e9f2;
-            border-radius: 1.2rem;
+            border-radius: 24px; /* Stärker abgerundet */
             outline: none;
             transition: all 0.2s;
+            color: #1e2b3a;
+            -webkit-appearance: none; /* Entfernt Standard-Styling auf iOS */
+            appearance: none;
         }
+
         input:focus {
             border-color: #f3b33d;
-            box-shadow: 0 0 0 4px rgba(243,179,61,0.15);
+            box-shadow: 0 0 0 4px rgba(243, 179, 61, 0.2);
         }
+
+        input::placeholder {
+            color: #9aafc4;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        /* Großer, leicht zu treffender Button */
         button {
             width: 100%;
-            padding: 1rem 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
+            padding: 18px 20px; /* Noch größere Klickfläche */
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: inherit;
             background: linear-gradient(105deg, #f3b33d, #f5c26b);
             border: none;
-            border-radius: 1.5rem;
+            border-radius: 40px; /* Sehr rund, modern */
             color: #1e2b3a;
             cursor: pointer;
-            box-shadow: 0 8px 20px -8px rgba(243,179,61,0.4);
-            transition: all 0.2s;
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 20px -5px rgba(243, 179, 61, 0.5);
+            transition: all 0.15s;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-top: 12px;
+            letter-spacing: 0.3px;
+            -webkit-tap-highlight-color: transparent; /* Entfernt grauen Tap-Highlight auf iOS */
         }
-        button:hover {
+
+        button:active {
+            transform: scale(0.98); /* Leichter Feedback beim Drücken */
             background: linear-gradient(105deg, #f5bc4f, #f7cd82);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px -8px #f3b33d;
+            box-shadow: 0 4px 12px -2px #f3b33d;
         }
+
+        /* Statusmeldung */
         #statusMessage {
-            margin-top: 1.5rem;
+            margin-top: 20px;
             text-align: center;
-            font-size: 0.95rem;
-            min-height: 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            min-height: 2.5rem;
+            padding: 0 8px;
         }
+
         .footer-note {
-            margin-top: 2rem;
-            font-size: 0.85rem;
+            margin-top: 28px;
+            font-size: 0.9rem;
             color: #6f8aa3;
             text-align: center;
             border-top: 1px dashed #d0dfee;
-            padding-top: 1.2rem;
+            padding-top: 20px;
         }
+
         .footer-note a {
             color: #2b4b6f;
             text-decoration: none;
+            font-weight: 600;
             border-bottom: 1px dotted #f3b33d;
+            padding-bottom: 2px;
+        }
+
+        .footer-note a:hover {
+            color: #f3b33d;
+        }
+
+        /* Speziell für sehr kleine Handys (unter 360px) */
+        @media (max-width: 360px) {
+            .card {
+                padding: 20px 16px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            button {
+                padding: 16px 16px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Verbesserungen für iOS – verhindert unschöne Rundungen */
+        input, button {
+            border-radius: 999px; /* Alternative: sehr rund */
         }
     </style>
 </head>
@@ -109,18 +184,20 @@
     <div class="card">
         <h1>👋 Rallye-Anmeldung</h1>
         <div class="subheadline">
-            Nimm an der QR-Code-Rallye teil –<br> 
-            einfach Name und Nachname eintragen.
+            QR-Code-Rallye –<br> 
+            Einfach Vorname und Nachname eintragen.
         </div>
 
         <form id="signupForm">
             <div class="form-group">
                 <label for="vorname">Vorname</label>
-                <input type="text" id="vorname" name="vorname" placeholder="z.B. Sofia" required>
+                <input type="text" id="vorname" name="vorname" placeholder="z.B. Sofia" 
+                       inputmode="text" autocomplete="given-name" required>
             </div>
             <div class="form-group">
                 <label for="nachname">Nachname</label>
-                <input type="text" id="nachname" name="nachname" placeholder="z.B. Meier" required>
+                <input type="text" id="nachname" name="nachname" placeholder="z.B. Meier" 
+                       inputmode="text" autocomplete="family-name" required>
             </div>
             <button type="submit" id="submitBtn">Für Rallye anmelden →</button>
         </form>
@@ -148,7 +225,6 @@
                 return;
             }
 
-            // Button deaktivieren, um Mehrfachklicks zu vermeiden
             submitBtn.disabled = true;
             submitBtn.textContent = 'Wird angemeldet ...';
             statusDiv.innerHTML = '';
