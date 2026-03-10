@@ -7,16 +7,16 @@ DATABASE_URL = os.environ.get('POSTGRES_URL')
 
 # Musterlösungen (für Test)
 CORRECT_ANSWERS = {
-    1: "B",      # Multiple Choice
-    2: "42",     # Texteingabe
-    3: "ja",     # Ja/Nein
-    4: "Berlin", # Stadt
-    5: "3",      # Zahl
-    6: "rot",    # Farbe
-    7: "Montag", # Wochentag
-    8: "true",   # Wahr/Falsch
-    9: "Schule", # Wort
-    10: "QR-Code" # letzte Frage
+    1: "B",          # Paris
+    2: "16",         # 16 Bundesländer
+    3: "ja",         # Ja
+    4: "rhein",      # Rhein
+    5: "gold,rot,schwarz",  # oder "schwarz,rot,gold" – wichtig: sortiert!
+    6: "1989-11-09", # Datum der Maueröffnung
+    7: "71",         # 71% Wasser
+    8: "test@beispiel.de",  # Beispiel-E-Mail (kann auch anders sein)
+    9: "49",         # Telefonvorwahl
+    10: "qr-code"    # QR-Code
 }
 
 class handler(BaseHTTPRequestHandler):
