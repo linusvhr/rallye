@@ -49,7 +49,6 @@
                     body: JSON.stringify({ token })
                 });
                 const status = await statusRes.json();
-                // Prüfen, dass Fragen 1-5 richtig sind
                 if (!status.status || status.status[0] !== true || status.status[1] !== true || status.status[2] !== true || status.status[3] !== true || status.status[4] !== true) {
                     window.location.href = '/quiz-5-9i0j1k2l';
                     return;
