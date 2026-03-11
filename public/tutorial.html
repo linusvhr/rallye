@@ -170,7 +170,6 @@
             <div class="qr-placeholder">
                 <i class="fa-solid fa-camera"></i>
                 <span>Hier erscheint der erste QR-Code – suche ihn, um zu starten.</span>
-                <!-- Später: <img src="qrcode.png" alt="QR-Code" style="width:100%; height:auto; border-radius:16px;"> -->
             </div>
         </div>
 
@@ -185,31 +184,25 @@
 
     <script>
         (async function() {
-            const token = localStorage.getItem('rallye_token');
-            const contentDiv = document.getElementById('content');
-
-            if (!token) {
-                window.location.href = '/signup';
-                return;
-            }
-
             try {
                 const response = await fetch('/api/verify-token', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token })
+                    headers: { 'Content-Type': 'application/json' }
                 });
+
+                if (!response.ok) {
+                    window.location.href = '/signup';
+                    return;
+                }
+
                 const data = await response.json();
 
                 if (data.valid) {
-                    contentDiv.style.display = 'block';
+                    document.getElementById('content').style.display = 'block';
                 } else {
-                    localStorage.removeItem('rallye_token');
                     window.location.href = '/signup';
                 }
             } catch (error) {
-                console.error('Fehler bei Tokenprüfung:', error);
-                localStorage.removeItem('rallye_token');
                 window.location.href = '/signup';
             }
         })();
