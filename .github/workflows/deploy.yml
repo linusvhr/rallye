@@ -6,7 +6,7 @@ env:
 
 on:
   push:
-    branches: [ main ]  # oder master, je nach deinem Hauptbranch
+    branches: [ main ]
 
 jobs:
   deploy:
