@@ -45,7 +45,6 @@ class handler(BaseHTTPRequestHandler):
                 )
             """)
 
-            # Prüfen, ob der Benutzer bereits existiert
             cur.execute("SELECT token FROM signups WHERE vorname = %s AND nachname = %s", (vorname, nachname))
             existing = cur.fetchone()
 
@@ -67,7 +66,6 @@ class handler(BaseHTTPRequestHandler):
         except psycopg2.IntegrityError as e:
             self.wfile.write(json.dumps({'error': 'Dieser Name ist bereits registriert (Integritätsfehler).'}).encode('utf-8'))
         except Exception as e:
-            # Fehlerdetails in die Logs von Vercel schreiben
             error_msg = str(e)
             traceback_str = traceback.format_exc()
             print("Fehler in signup.py:", error_msg, file=sys.stderr)
