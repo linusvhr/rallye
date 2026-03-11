@@ -72,13 +72,12 @@
                 });
                 const data = await res.json();
                 let last = data.last_correct || 0;
-                // slugs müssen mit den tatsächlichen Dateinamen übereinstimmen
                 const slugs = [
                     "8f7a3b9c", "d4e5f6a7", "1a2b3c4d", "5e6f7g8h", "9i0j1k2l",
                     "3m4n5o6p", "7q8r9s0t", "1u2v3w4x", "5y6z7a8b", "9c0d1e2f"
                 ];
                 if (last === 0) {
-                    window.location.href = '/quiz-1-8f7a3b9c'; // erste Frage
+                    window.location.href = '/quiz-1-8f7a3b9c';
                 } else {
                     document.getElementById('goToLastBtn').onclick = () => {
                         window.location.href = `/quiz-${last}-${slugs[last-1]}`;
