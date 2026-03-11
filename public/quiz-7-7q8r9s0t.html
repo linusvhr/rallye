@@ -70,7 +70,6 @@
                     body: JSON.stringify({ token })
                 });
                 const status = await statusRes.json();
-                // Prüfen, dass Fragen 1-6 richtig
                 for (let i = 0; i < 6; i++) {
                     if (!status.status || status.status[i] !== true) {
                         window.location.href = '/quiz-6-3m4n5o6p';
