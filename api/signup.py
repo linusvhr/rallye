@@ -66,7 +66,7 @@ class handler(BaseHTTPRequestHandler):
             self.send_header('Set-Cookie', f'rallye_token={token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=31536000')
             self.end_headers()
             
-            self.wfile.write(json.dumps({'status': 'ok', 'message': message}).encode('utf-8'))
+            self.wfile.write(json.dumps({'status': 'ok', 'message': message, 'token': token}).encode('utf-8'))
 
         except psycopg2.IntegrityError:
             self._send_error(400, 'Dieser Name ist bereits registriert (Integritätsfehler).')
