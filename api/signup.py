@@ -32,17 +32,24 @@ class handler(BaseHTTPRequestHandler):
                     id SERIAL PRIMARY KEY,
                     vorname TEXT NOT NULL,
                     nachname TEXT NOT NULL,
-                    created_at TIMESTAMP DEFAULT NOW(),
-                    token VARCHAR(32) UNIQUE
+                    created_at TIMESTAMP DEFAULT NOW()
                 )
+            """)
+
+            cur.execute("""
+                ALTER TABLE signups ADD COLUMN IF NOT EXISTS token VARCHAR(32) UNIQUE;
             """)
 
             cur.execute("SELECT token FROM signups WHERE vorname = %s AND nachname = %s", (vorname, nachname))
             existing = cur.fetchone()
 
-            if existing:
+            if existing and existing[0]:
                 token = existing[0]
                 message = f"Willkommen zurück, {vorname} {nachname}!"
+            elif existing and not existing[0]:
+                token = secrets.token_urlsafe(16)[:16]
+                cur.execute("UPDATE signups SET token = %s WHERE vorname = %s AND nachname = %s", (token, vorname, nachname))
+                message = f"Willkommen zurück, {vorname} {nachname}! (Token aktualisiert)"
             else:
                 token = secrets.token_urlsafe(16)[:16]
                 cur.execute("INSERT INTO signups (vorname, nachname, token) VALUES (%s, %s, %s) RETURNING token", (vorname, nachname, token))
