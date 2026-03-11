@@ -35,9 +35,7 @@ class handler(BaseHTTPRequestHandler):
 
             if not row:
                 self.wfile.write(json.dumps({'error': 'User nicht gefunden'}).encode('utf-8'))
-                return
 
-            # Letzte bestandene Frage ermitteln (0 = keine)
             last_correct = 0
             for i in range(10):
                 if row[i]:
