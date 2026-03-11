@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zugriff verweigert</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f9fafc 0%, #eef2f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .card {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 100%;
+            padding: 32px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #d32f2f;
+            margin-bottom: 16px;
+        }
+        p {
+            color: #2e4059;
+            margin-bottom: 24px;
+        }
+        button {
+            background: linear-gradient(105deg, #f3b33d, #f5c26b);
+            border: none;
+            border-radius: 40px;
+            padding: 14px 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e2b3a;
+            cursor: pointer;
+            box-shadow: 0 8px 20px -5px rgba(243,179,61,0.5);
+            border: 1px solid rgba(255,255,255,0.4);
+            transition: all 0.15s;
+        }
+        button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1><i class="fa-solid fa-lock"></i> 403</h1>
+        <p>Du hast diese Frage noch nicht freigeschaltet.<br>Gehe zur letzten richtig beantworteten Frage.</p>
+        <button id="goToLastBtn">Zum letzten Tipp</button>
+    </div>
+    <script>
+        (async function() {
+            const token = localStorage.getItem('rallye_token');
+            if (!token) {
+                window.location.href = '/signup';
+                return;
+            }
+            try {
+                const res = await fetch('/api/quiz-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                let last = data.last_correct || 0;
+                const slugs = [
+                    "8f7a3b9c", "d4e5f6a7", "1a2b3c4d", "5e6f7g8h", "9i0j1k2l",
+                    "3m4n5o6p", "7q8r9s0t", "1u2v3w4x", "5y6z7a8b", "9c0d1e2f"
+                ];
+                if (last === 0) {
+                    window.location.href = '/quiz-1-8f7a3b9c';
+                } else {
+                    document.getElementById('goToLastBtn').onclick = () => {
+                        window.location.href = `/quiz-${last}-${slugs[last-1]}`;
+                    };
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    </script>
+</body>
+</html>
