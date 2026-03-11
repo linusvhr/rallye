@@ -2,19 +2,23 @@ from http.server import BaseHTTPRequestHandler
 import json
 import os
 import psycopg2
+from http.cookies import SimpleCookie
 
 DATABASE_URL = os.environ.get('POSTGRES_URL')
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
-            content_length = int(self.headers.get('Content-Length', 0))
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data.decode('utf-8'))
-            token = data.get('token', '').strip()
+            cookie_header = self.headers.get('Cookie')
+            token = None
+            
+            if cookie_header:
+                cookie = SimpleCookie(cookie_header)
+                if 'rallye_token' in cookie:
+                    token = cookie['rallye_token'].value
 
             if not token:
-                self._send_response(200, {'valid': False})
+                self._send_response(401, {'valid': False})
                 return
 
             conn = psycopg2.connect(DATABASE_URL)
@@ -24,10 +28,13 @@ class handler(BaseHTTPRequestHandler):
             cur.close()
             conn.close()
 
-            self._send_response(200, {'valid': exists})
+            if exists:
+                self._send_response(200, {'valid': True})
+            else:
+                self._send_response(401, {'valid': False})
 
         except Exception:
-            self._send_response(200, {'valid': False})
+            self._send_response(500, {'valid': False})
 
     def _send_response(self, status, data):
         self.send_response(status)
@@ -40,5 +47,5 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Cookie')
         self.end_headers()
