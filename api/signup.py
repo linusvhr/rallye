@@ -10,7 +10,6 @@ DATABASE_URL = os.environ.get('POSTGRES_URL')
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
-        # CORS-Header für alle Responses
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -33,11 +32,9 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({'error': 'Datenbank-URL nicht konfiguriert.'}).encode('utf-8'))
                 return
 
-            # Datenbankverbindung
             conn = psycopg2.connect(DATABASE_URL)
             cur = conn.cursor()
 
-            # Tabelle anlegen (falls nicht vorhanden) mit token-Spalte
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS signups (
                     id SERIAL PRIMARY KEY,
