@@ -109,7 +109,6 @@
             const token = localStorage.getItem('rallye_token');
             if (!token) { window.location.href = '/signup'; return; }
 
-            // Prüfen, ob Frage 1 bereits richtig beantwortet wurde (dann Weiterleitung zur Antwortseite)
             try {
                 const statusRes = await fetch('/api/quiz-status', {
                     method: 'POST',
