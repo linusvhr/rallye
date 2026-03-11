@@ -5,15 +5,14 @@ import psycopg2
 
 DATABASE_URL = os.environ.get('POSTGRES_URL')
 
-# Musterlösungen (anpassen!)
 CORRECT_ANSWERS = {
-    1: "B",          # Paris
-    2: "16",         # 16 Bundesländer
-    3: "ja",         # Ja
-    4: "rhein",      # Rhein
-    5: "gold,rot,schwarz",  # sortiert!
-    6: "1989-11-09", # Datum
-    7: "71",         # 71%
+    1: "B",          
+    2: "16",         
+    3: "ja",         
+    4: "rhein",      
+    5: "gold,rot,schwarz",
+    6: "1989-11-09",
+    7: "71",         
     8: "test@beispiel.de",
     9: "49",
     10: "qr-code"
@@ -45,7 +44,6 @@ class handler(BaseHTTPRequestHandler):
             conn = psycopg2.connect(DATABASE_URL)
             cur = conn.cursor()
 
-            # Optional: Prüfen, ob vorherige Fragen richtig sind
             if question > 1:
                 prev_cols = [f"q{i}_correct" for i in range(1, question)]
                 cur.execute(f"SELECT {', '.join(prev_cols)} FROM signups WHERE token = %s", (token,))
